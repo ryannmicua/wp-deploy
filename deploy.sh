@@ -1,10 +1,20 @@
 #!/bin/bash
+#
+# This syncs from your git master branch to a specified svn branch/directory i.e. trunk or tag/1.4
+# You can call the script anywhere as long as the $BASEDIR is specified
+#
+# Setup: specify your BASEDIR
+# 
+# @usage: ./deploy.sh
 
 # args
 MSG=${1-'Deploy from git'}
-BRANCH=${2-'trunk'}
+BRANCH=${2-'trunk'} #svn branch
+TAG=${3-''}
 
-BASEDIR=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+#BASEDIR=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+BASEDIR=/home/pogidude/projects/justme/plugins/email-reminder/email-reminder
+
 SLUG=$(basename $BASEDIR)
 SRC_DIR=${BASEDIR}/git
 DEST_DIR=${BASEDIR}/svn/$BRANCH
@@ -61,5 +71,6 @@ svn stat | awk '/^\!/ {print $2}' | xargs svn rm --force
 
 svn stat
 
+echo committing...
 svn ci -m "$MSG"
 
